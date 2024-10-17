@@ -14,7 +14,7 @@ import sensor_msgs_py.point_cloud2 as pc2
 
 # Python Imports
 import numpy as np
-import open3d as o3d
+# import open3d as o3d
 from scipy.spatial import KDTree
 
 
@@ -120,7 +120,7 @@ class PointCloudMerger(Node):
                 g = (rgb_int >> 8) & 0x0000ff
                 b = rgb_int & 0x0000ff
 
-                self.get_logger().info(f"Unpacked RGB: R={r}, G={g}, B={b}")
+                # self.get_logger().info(f"Unpacked RGB: R={r}, G={g}, B={b}")
 
                 packed_rgb = (r << 16) | (g << 8) | b
 
