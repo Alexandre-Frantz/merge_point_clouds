@@ -84,7 +84,7 @@ class PointCloudMerger(Node):
             PointField(name='x', offset=0, datatype=PointField.FLOAT32,count=1),
             PointField(name='y', offset=4, datatype=PointField.FLOAT32,count=1),
             PointField(name='z', offset=8, datatype=PointField.FLOAT32,count=1),
-            PointField(name='rgb', offset=12, datatype=PointField.UINT32,count=1),
+            PointField(name='rgb', offset=12, datatype=PointField.FLOAT32,count=1),
         ]
         pointcloud = pc2.create_cloud(header, fields, points)
 
@@ -109,25 +109,13 @@ class PointCloudMerger(Node):
 
             if (distance < 0.05):
                 nearest_rgb_point = rgbd_points[idx]
-                # self.get_logger().info("RGB: " + str(nearest_rgb_point[3]))
-                # self.get_logger().info("RGB uint32: " + str(np.uint32(nearest_rgb_point[3])))
 
                 rgb_value = nearest_rgb_point[3]
-                rgb_int = struct.unpack('I', struct.pack('f', rgb_value))[0]
 
-                # Extract individual R, G, B values from packed int
-                r = (rgb_int >> 16) & 0x0000ff
-                g = (rgb_int >> 8) & 0x0000ff
-                b = rgb_int & 0x0000ff
-
-                # self.get_logger().info(f"Unpacked RGB: R={r}, G={g}, B={b}")
-
-                packed_rgb = (r << 16) | (g << 8) | b
-
-                rgb_value = nearest_rgb_point[3]
-                merged_points.append((nearest_rgb_point[0], nearest_rgb_point[1], nearest_rgb_point[2], packed_rgb))
+                merged_points.append((nearest_rgb_point[0], nearest_rgb_point[1], nearest_rgb_point[2], rgb_value))
             else:
                 merged_points.append((*lidar_p,0))
+
         
         merged_cloud = self.create_pointcloud2(merged_points)
 
